@@ -1,0 +1,40 @@
+$background-color-dark: #161618;
+$primary-color: #00bcd4;
+$text-color-dark: #f3f3f3;
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: $background-color-dark;
+    color: $text-color-dark;
+    font-family: 'Roboto', sans-serif;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #555; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: $primary-color; 
+  }
