@@ -1,0 +1,16 @@
+@import 'main';
+
+#header {
+    position: absolute;
+    width: 100%;
+    z-index: 9;
+
+    .content-header {
+        width: 90%;
+        margin: 10px auto 0;
+    }
+
+    .header-logo {
+        width: 65px;
+    }
+}

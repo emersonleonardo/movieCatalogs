@@ -2,6 +2,12 @@ $background-color-dark: #161618;
 $primary-color: #00bcd4;
 $text-color-dark: #f3f3f3;
 
+$breakpoint-laptop: 1024px;
+$breakpoint-tablet: 768px;
+$breakpoint-mobile-large: 425px;
+$breakpoint-mobile-medium: 375px;
+$breakpoint-mobile-small: 320px;
+
 * {
     padding: 0;
     margin: 0;
