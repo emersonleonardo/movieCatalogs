@@ -6,6 +6,8 @@ const params = getParams.get('t')
 
 const container = document.querySelector('#container-info-movie')
 
+getInfo(params);
+
 async function getInfo(movieID) {
     
     const newULR = `${URL}movie/${movieID}?api_key=${api}&language=${lang}`
@@ -18,9 +20,22 @@ async function getInfo(movieID) {
     })
     .catch(error => console.log('Error: ', error))
 
+    getCasts(movieID)
+}
+
+async function getCasts(movieID) {
+    const newURLCasts = `${URL}movie/${movieID}/credits?api_key=${api}&language=${lang}`
+
+    await fetch(newURLCasts)
+        .then(response => response.json())
+        .then(result => {
+            const casts = createContentCasts(result.cast)
+            container.appendChild(casts)
+        })
+        .catch(error => console.log('Error: ', error))
+
     getVideos(movieID)
 }
-getInfo(params);
 
 async function getVideos(movieID) {
     const newUrlVideos = `${URL}movie/${movieID}/videos?api_key=${api}&language=${lang}`
@@ -42,7 +57,7 @@ async function getSimilarMovies(movieID) {
 
     const titleContainer = document.createElement('h2')
     titleContainer.setAttribute('class', 'title-list-movie')
-    titleContainer.innerHTML = 'Filmes similares'
+    titleContainer.innerHTML = 'Sugestões'
 
     const newUrlVideos = `${URL}movie/${movieID}/similar?api_key=${api}&language=${lang}`
 
@@ -63,8 +78,8 @@ function createContentMovie(data) {
     document.title = data.title
 
     const section = document.createElement('section')
-    section.setAttribute('class', 'section-move')
-    section.style.backgroundImage = `url(${imageURL}${data.backdrop_path})`
+    section.setAttribute('class', 'section-movie')
+    section.style.backgroundImage = `url(${imageURLBanner}${data.backdrop_path})`
 
     const mask = document.createElement('div')
     mask.setAttribute('class', 'mask')
@@ -80,7 +95,7 @@ function createContentMovie(data) {
 
     const poster = document.createElement('img')
     poster.setAttribute('class', 'poster-movie')
-    poster.src = `${imageURL}${data.poster_path}`
+    poster.src = `${imageURLPoster}${data.poster_path}`
     poster.setAttribute('alt', data.title)
 
     const title = document.createElement('h1')
@@ -147,6 +162,7 @@ function createContentVideos(data) {
     data.map(video => {
         const iframe = document.createElement('iframe')
         iframe.src = `https://www.youtube.com/embed/${video.key}`
+        iframe.setAttribute('allowfullscreen', 'allowfullscreen')
         
         contentVideos.appendChild(iframe)
     })
@@ -156,4 +172,43 @@ function createContentVideos(data) {
     sectionVideos.appendChild(contentVideos)
 
     return sectionVideos
+}
+
+function createContentCasts(data) {
+    const sectionCasts = document.createElement('section')
+    sectionCasts.setAttribute('class', 'section-casts')
+
+    const contentCasts = document.createElement('div')
+    contentCasts.setAttribute('class', 'content-casts')
+
+    const titleSection = document.createElement('h2')
+    titleSection.setAttribute('class', 'title-section')
+    titleSection.innerHTML = 'Elenco'
+
+    data.slice(0, 30).map(cast => {
+        const contentCast = document.createElement('div')
+        contentCast.setAttribute('class', 'content-cast')
+
+        const castImage = document.createElement('div')
+        castImage.setAttribute('class', 'cast-image')
+        castImage.style.backgroundImage = `url(${imageURLCast}${cast.profile_path})`
+
+        const castCharacter = document.createElement('p')
+        castCharacter.setAttribute('class', 'cast-character')
+        castCharacter.innerHTML = cast.character
+
+        const castName = document.createElement('p')
+        castName.setAttribute('class', 'cast-name')
+        castName.innerHTML = cast.name
+
+        contentCast.appendChild(castImage)
+        contentCast.appendChild(castName)
+        contentCast.appendChild(castCharacter)
+        contentCasts.appendChild(contentCast)
+    })
+
+    sectionCasts.appendChild(titleSection)
+    sectionCasts.appendChild(contentCasts)
+
+    return sectionCasts
 }

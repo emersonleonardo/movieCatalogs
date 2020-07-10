@@ -1,36 +1,44 @@
-const api = 'API_KEY_THE_MOVIEDB';
+const api = '710b6fece39fed00038f90dcfe8a909a';
 const URL = 'https://api.themoviedb.org/3/';
-const imageURL = 'https://image.tmdb.org/t/p/original';
+const imageURLBanner = 'https://image.tmdb.org/t/p/original';
+const imageURLPoster = 'https://image.tmdb.org/t/p/w500';
+const imageURLCast = 'https://image.tmdb.org/t/p/w200';
 const lang = 'pt-BR';
+
+const breakpointMobileLarge = window.matchMedia('(max-width: 468px)')
 
 function listMovies(data) {
 
     const moviesElement = document.createElement('div')
     moviesElement.setAttribute('class', 'movies');
 
-    data.map(movie => {
+    if(data.length > 0) {
+        data.map(movie => {
         
-        const movieElement = document.createElement('div')
-        movieElement.setAttribute('class', 'movie')
-        movieElement.setAttribute('data-movie-id', movie.id)
-
-        const movieBannerElement = document.createElement('div')
-        movieBannerElement.setAttribute('class', 'banner-movie-list')
-        
-        if(movie.poster_path) {
-            const banner = imageURL + movie.poster_path;
-            movieBannerElement.style.backgroundImage = `url(${banner})`
-        } else {
-            const banner = 'https://via.placeholder.com/200x300';
-            movieBannerElement.style.backgroundImage = `url(${banner})`
-        }
-
-        movieElementInfo = createElementInfoMovie(movie)
-
-        movieElement.appendChild(movieBannerElement)
-        movieElement.appendChild(movieElementInfo)
-        moviesElement.appendChild(movieElement)
-    })
+            const movieElement = document.createElement('div')
+            movieElement.setAttribute('class', 'movie')
+            movieElement.setAttribute('data-movie-id', movie.id)
+    
+            const movieBannerElement = document.createElement('img')
+            movieBannerElement.setAttribute('class', 'banner-movie-list')
+            
+            if(movie.poster_path) {
+                const banner = imageURLPoster + movie.poster_path;
+                movieBannerElement.src = banner
+            } else {
+                const banner = 'https://via.placeholder.com/200x300';
+                movieBannerElement.src = banner
+            }
+    
+            movieElementInfo = createElementInfoMovie(movie)
+    
+            movieElement.appendChild(movieBannerElement)
+            movieElement.appendChild(movieElementInfo)
+            moviesElement.appendChild(movieElement)
+        })
+    } else {
+        moviesElement.innerHTML = '<p>Não encontramos resultado</p>';
+    }    
 
     return moviesElement;
 }
@@ -76,24 +84,33 @@ function createElementInfoMovie(data) {
 
 document.onclick = event => {
     const target = event
-    const attribute = target.path[1].getAttribute('class')
+    const attributeImgMovie = target.path[0].getAttribute('class')
+    const attributeCloseMovie = target.path[1].getAttribute('class')
     
-    if(attribute === 'movie') {
-        const checkWindowInfoMovie = document.querySelectorAll('.window-info-movie.open');
+    if(attributeImgMovie === 'banner-movie-list') {
+
+        if(breakpointMobileLarge.matches) {
+            const linkMovie = target.path[1].children[1].childNodes[3].href;
+            window.open(linkMovie, '_self')
+        }
+        
+        const checkWindowInfoMovie = document.querySelectorAll('.movie.open');
         
         if (checkWindowInfoMovie.length > 0) {
             checkWindowInfoMovie.forEach( infoOpened => {
                 infoOpened.classList.remove('open');
-                console.log(checkWindowInfoMovie)
             })
         }
-        const windowInfoMovie = target.path[1].lastChild;
-        windowInfoMovie.classList.add('open')
+        
+        const windowInfoMovie = target.path[1];
+        windowInfoMovie.classList.toggle('open')
+        windowInfoMovie.scrollIntoView({
+            behavior: 'smooth'
+        })
     }
 
-    if(attribute === 'close-info-element-movie') {
-        const closeWindowInfoMovie = target.path[2]
+    if(attributeCloseMovie === 'close-info-element-movie') {
+        const closeWindowInfoMovie = target.path[3]
         closeWindowInfoMovie.classList.remove('open')
     }
-
 }

@@ -26,7 +26,7 @@ buttonSearch.onclick = event => {
             containerSearchMovies.innerHTML = '';
 
             containerSearchMovies.appendChild(titleContainer);
-            containerSearchMovies.appendChild(movies)
+            containerSearchMovies.appendChild(movies)            
         })
         .catch( error => {
             console.log('Error: ', error)
