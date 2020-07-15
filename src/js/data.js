@@ -1,11 +1,30 @@
-const api = '710b6fece39fed00038f90dcfe8a909a';
+const api = 'API_MOVIEDB';
 const URL = 'https://api.themoviedb.org/3/';
+const lang = 'pt-BR';
+
 const imageURLBanner = 'https://image.tmdb.org/t/p/original';
 const imageURLPoster = 'https://image.tmdb.org/t/p/w500';
 const imageURLCast = 'https://image.tmdb.org/t/p/w200';
-const lang = 'pt-BR';
+const imageURLDefaultPoster = 'https://via.placeholder.com/200x300'
 
 const breakpointMobileLarge = window.matchMedia('(max-width: 468px)')
+
+function requestData(newURL) {
+    return fetch(newURL)
+        .then(response => response.json())
+        .then(result => result)
+        .catch(error => console.log('Error: ', error))
+}
+
+function createUrlSearch(path, query) {
+    const newUrlSearch = `${URL}${path}?api_key=${api}&query=${query}&language=${lang}`
+    return newUrlSearch;
+}
+
+function createUrl(path) {
+    const newURL = `${URL}${path}?api_key=${api}&language=${lang}`
+    return newURL;
+}
 
 function listMovies(data) {
 
@@ -19,20 +38,19 @@ function listMovies(data) {
             movieElement.setAttribute('class', 'movie')
             movieElement.setAttribute('data-movie-id', movie.id)
     
-            const movieBannerElement = document.createElement('img')
-            movieBannerElement.setAttribute('class', 'banner-movie-list')
+            const moviePosterElement = document.createElement('img')
+            moviePosterElement.setAttribute('class', 'banner-movie-list')
             
             if(movie.poster_path) {
                 const banner = imageURLPoster + movie.poster_path;
-                movieBannerElement.src = banner
+                moviePosterElement.src = banner
             } else {
-                const banner = 'https://via.placeholder.com/200x300';
-                movieBannerElement.src = banner
+                moviePosterElement.src = imageURLDefaultPoster
             }
     
             movieElementInfo = createElementInfoMovie(movie)
     
-            movieElement.appendChild(movieBannerElement)
+            movieElement.appendChild(moviePosterElement)
             movieElement.appendChild(movieElementInfo)
             moviesElement.appendChild(movieElement)
         })

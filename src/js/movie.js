@@ -10,43 +10,36 @@ getInfo(params);
 
 async function getInfo(movieID) {
     
-    const newULR = `${URL}movie/${movieID}?api_key=${api}&language=${lang}`
+    const path = `movie/${movieID}`
+    const newUrl = createUrl(path);
 
-    await fetch(newULR)
-    .then(response => response.json())
-    .then(result => {
-        const movie = createContentMovie(result)
-        container.appendChild(movie);
-    })
-    .catch(error => console.log('Error: ', error))
+    const data = await requestData(newUrl)
+    const movie = createContentMovie(data)
+    container.appendChild(movie);
 
     getCasts(movieID)
 }
 
 async function getCasts(movieID) {
-    const newURLCasts = `${URL}movie/${movieID}/credits?api_key=${api}&language=${lang}`
 
-    await fetch(newURLCasts)
-        .then(response => response.json())
-        .then(result => {
-            const casts = createContentCasts(result.cast)
-            container.appendChild(casts)
-        })
-        .catch(error => console.log('Error: ', error))
+    const path = `movie/${movieID}/credits`
+    const newURLCasts = createUrl(path);
+
+    const data = await requestData(newURLCasts)
+    const casts = createContentCasts(data.cast)
+    container.appendChild(casts)
 
     getVideos(movieID)
 }
 
 async function getVideos(movieID) {
-    const newUrlVideos = `${URL}movie/${movieID}/videos?api_key=${api}&language=${lang}`
 
-    await fetch(newUrlVideos)
-    .then(response => response.json())
-    .then(result => {
-        const videos = createContentVideos(result.results)
-        container.appendChild(videos)
-    })
-    .catch(error => console.log('Error: ', error))
+    const path = `movie/${movieID}/videos`
+    const newUrlVideos = createUrl(path);
+
+    const data = await requestData(newUrlVideos)
+    const videos = createContentVideos(data.results)
+    container.appendChild(videos)
 
     getSimilarMovies(movieID)
 }
@@ -59,19 +52,15 @@ async function getSimilarMovies(movieID) {
     titleContainer.setAttribute('class', 'title-list-movie')
     titleContainer.innerHTML = 'Sugestões'
 
-    const newUrlVideos = `${URL}movie/${movieID}/similar?api_key=${api}&language=${lang}`
+    const path = `movie/${movieID}/similar`
+    const newUrlVideos = createUrl(path);
 
-    await fetch(newUrlVideos)
-    .then(response => response.json())
-    .then(result => {
-        const data = result.results
-        const movies = listMovies(data)
+    const data = await requestData(newUrlVideos)
+    const movies = listMovies(data.results)
             
-        sectionVideos.appendChild(titleContainer);
-        sectionVideos.appendChild(movies)
-        container.appendChild(sectionVideos)
-    })
-    .catch(error => console.log('Error: ', error))
+    sectionVideos.appendChild(titleContainer);
+    sectionVideos.appendChild(movies)
+    container.appendChild(sectionVideos)
 }
 
 function createContentMovie(data) {
