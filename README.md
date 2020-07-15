@@ -1,6 +1,4 @@
-<div style="background: #ccc; width: 100%">
-    <img alt="" src="src/assets/LogFilmesBlock.png">
-</div>
+<img alt="" src=".github/LogFilmesBlock.png">
 
 <p align="center">
   <a href="#-projeto">Projeto</a>&nbsp;|&nbsp;
